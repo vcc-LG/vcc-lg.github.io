@@ -27,9 +27,9 @@ As mentioned above we are with Octopus, and we are on a dual electricity rate, m
 
 Because of this cheap night time rate, I generally force charge the batteries overnight so that we can use cheaper electricity throughout most (or ideally all) of the day without having to import electricity at the much more expensive day rate. I'm not sure if my thinking on the issue is optimal, but in the less sunny months I think it's ideal to have the batteries finish force-charging at 04:30 with a 100% state of charge (SoC), and for that value to gradually decrease during the day down to 10% (the batteries cannot go below this SoC value) by the time it's 00:30 the next day. If the batteries are at a higher SoC by this time then that is fine because then we'll have to import fewer kWh's to get them back to 100%.
 
-We also have an electric vehicle, and so
+We also have an electric vehicle, a fairly old Renault Zoe with a 22kWh battery, and we typically charge it during this cheap night period. We have a Zappi charger which permits solar excess charging - in other words once the batteries are full then any additional solar power is redirected into the car. However, given that we tend to need the car first thing in the morning, I have found that I can only use this feature if I'm very confident that no one is going to need the car until either the following day or the evening.
 
-
+Our system is (I think) prioritised such that solar power first goes into the batteries, then once they are full it is used to heat our hot water, and once that is heated to the target temperature then it goes into the car.
 
 
 ## Methodology
