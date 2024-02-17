@@ -11,15 +11,41 @@ This post describes the process of determining how much our solar panels and bat
 
 Nevertheless there is some satisfaction to be found in the idea of a purchase such as this eventually saving you more money than the cost of the thing itself, so I am going to try and work out how far away we are from this point (making hopefully the reasonable assumption they are saving us money at all). I'll explain my calculation processes, simplifications etc. along the way, and link to relevant code in case you want to try something similar!
 
-## Our setup
+## Our setup and costs
+
+The house has a gas boiler for hot water and central heating. In August 2022 we had the following installed:
 
 - SolaX X1 G4 Hybrid 5kW Inverter
 - 1 x master and 2 x slave SolaX Triple Power (5.8kWh each, 17.4kWh total)
 - 18 x Trina TSM-DE09.05 390W solar panels (7.02kW total)
 
-This was installed in August 2022. We went on to have a Marlec Solar iBoost (which is used to heat our hot water tank from both solar and )
+The total cost for the kit and installation was £12,925.
 
-## Cost
+We went on to have a Marlec Solar iBoost (which is used to heat our hot water tank from both solar and electricity) installed in June 2023. The cost for the unit and installation was about £600.
+
+As mentioned above we are with Octopus, and we are on a dual electricity rate, meaning that we get cheaper electricity between 00:30 and 04:30. We also export a certain amount of electricity when it is very sunny and our batteries are full.
+
+Because of this cheap night time rate, I generally force charge the batteries overnight so that we can use cheaper electricity throughout most (or ideally all) of the day without having to import electricity at the much more expensive day rate. I'm not sure if my thinking on the issue is optimal, but in the less sunny months I think it's ideal to have the batteries finish force-charging at 04:30 with a 100% state of charge (SoC), and for that value to gradually decrease during the day down to 10% (the batteries cannot go below this SoC value) by the time it's 00:30 the next day. If the batteries are at a higher SoC by this time then that is fine because then we'll have to import fewer kWh's to get them back to 100%.
+
+We also have an electric vehicle, and so
+
+
+
+
+## Methodology
+
+The calculation I want to end up with is something like this:
+
+```
+avg_savings_per_month = (total_amount_spent - amount_saved)/number_of_months_since_installation
+```
+
+The easier part of this is working out how much our energy costs have been since the purchase and installation: it's simply the sum of the data in our bills. Our bills are broken down into electricity and gas costs, and given that our panels, batteries, and iBoost have impacts on both of these readings, we can assume that savings are being made in both costs. It is only the costs of our central heating, which remains entirely dependent on gas, which is unaffected by our equipment.
+
+The much more difficult part is working out what we _would_ have spent had we not made the above purchases. Unfortunately we can't just look at the logs of our solar/battery system and look at 'kWh generated' and assume that this can directly translate to energy we would have purchased from Octopus. For example, if on a very sunny day I can see that I exported 7kWh and used
+
+
+## What we have spent
 
 The total cost for the equipment and installation was
 
