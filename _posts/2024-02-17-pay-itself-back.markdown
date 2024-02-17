@@ -11,12 +11,14 @@ This post describes the process of determining how much our solar panels and bat
 
 Nevertheless there is some satisfaction to be found in the idea of a purchase such as this eventually saving you more money than the cost of the thing itself, so I am going to try and work out how far away we are from this point (making hopefully the reasonable assumption they are saving us money at all). I'll explain my calculation processes, simplifications etc. along the way, and link to relevant code in case you want to try something similar!
 
+As an aside, we had various teething problems with the solar and batteries which I won't describe here as it would make things too long and complicated. The issues absolutely reduced the extent to which the kit was saving us money, and I mention it only to imply that having now overcome these issues, our rate of savings is higher than it was for probably the first year or so of having this system.
+
 ## Our setup and costs
 
-The house has a gas boiler for hot water and central heating. In August 2022 we had the following installed:
+The house has a gas boiler for hot water and central heating. In late August 2022 we had the following installed:
 
 - SolaX X1 G4 Hybrid 5kW Inverter
-- 1 x master and 2 x slave SolaX Triple Power (5.8kWh each, 17.4kWh total)
+- 1 x master and 2 x slave SolaX Triple Power batteries (5.8kWh each, 17.4kWh total)
 - 18 x Trina TSM-DE09.05 390W solar panels (7.02kW total)
 
 The total cost for the kit and installation was £12,925.
@@ -42,35 +44,25 @@ avg_savings_per_month = (total_amount_spent - amount_saved)/number_of_months_sin
 
 The easier part of this is working out how much our energy costs have been since the purchase and installation: it's simply the sum of the data in our bills. Our bills are broken down into electricity and gas costs, and given that our panels, batteries, and iBoost have impacts on both of these readings, we can assume that savings are being made in both costs. It is only the costs of our central heating, which remains entirely dependent on gas, which is unaffected by our equipment.
 
-The much more difficult part is working out what we _would_ have spent had we not made the above purchases. Unfortunately we can't just look at the logs of our solar/battery system and look at 'kWh generated' and assume that this can directly translate to energy we would have purchased from Octopus. For example, if on a very sunny day I can see that I exported 7kWh and used
+The much more difficult part is working out what we _would_ have spent had we not made the above purchases.
+
+## What we have spent on energy since buying the equipment
+
+We can get this information from our Octopus bills like this:
+
+![alt text](/images/octopus_payment_sample.png)
+
+So we could theoretically just add each of these values into a spreadsheet and sum it up. However, in doing this we are missing an opportunity to collect information at the same time which we know will we need later, i.e. the raw usage and tariff values. So instead perhaps we can leverage the [Octopus API](https://developer.octopus.energy/docs/api/#consumption) to see if it can help speed up this process for us. Specifically let's see if the electricity consumption endpoint gives us what we need:
+
+```json
+"results": [
+    {
+        "consumption": 0.28,
+        "interval_start": "2024-02-16T23:30:00Z",
+        "interval_end": "2024-02-17T00:00:00Z"
+    },
+```
+Well... not quite. We have a kWh value but no corresponding tariff to help us calculate the cost to us. Octopus have an endpoint for tariff information but of course we need to know what tariff we were on on a given date for this to be useful. And whilst I am all for overengineering a solution, I believe our best option at this point is to manually walk through every bill and collate the data ourselves. This won't be so painful as we only need to go back to August 2022. For the sake of figuring out data for partial months (and losing only a few days worth of energy data) I will assume the panels were installed and working on 1st September 2022.
 
 
-## What we have spent
 
-The total cost for the equipment and installation was
-
-
-
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
-
-Jekyll requires blog post files to be named according to the following format:
-
-`YEAR-MONTH-DAY-title.MARKUP`
-
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
-
-Jekyll also offers powerful support for code snippets:
-
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
-{% endhighlight %}
-
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
-
-[jekyll-docs]: https://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
