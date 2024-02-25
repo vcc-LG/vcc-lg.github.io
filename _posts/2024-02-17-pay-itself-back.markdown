@@ -7,15 +7,15 @@ categories: solar batteries
 
 ## Introduction
 
-This post describes the process of determining how much our solar panels and batteries have 'paid themselves back'. This is a common line of thought that people have when purchasing a renewable system like panels. Personally I view the decision to buy them as simply having been the logical choice given situation at the time: we had the money to buy a fairly substantial solar system, and the alternative was to continue to rely entirely upon on-grid electricity. Even though our provider, Octopus, sources a low-ish percentage of its electricity from fossil fuels, it's still about 30%, so continuing to use electricity entirely from Octopus doesn't help us in our goal to move away from fossil fuels entirely.
+In late August 2022 we had solar panels and batteries installed in our house. This post describes the process of determining how much so far they have 'paid themselves back'. This is a common line of thought that people have when purchasing a home renewables system like panels.
 
-Nevertheless there is some satisfaction to be found in the idea of a purchase such as this eventually saving you more money than the cost of the thing itself, so I am going to try and work out how far away we are from this point (making hopefully the reasonable assumption they are saving us money at all). I'll explain my calculation processes, simplifications etc. along the way, and link to relevant code in case you want to try something similar!
+I'll explain my calculation processes, simplifications etc. along the way, and link to relevant code in case you want to try something similar.
 
-As an aside, we had various teething problems with the solar and batteries which I won't describe here as it would make things too long and complicated. The issues absolutely reduced the extent to which the kit was saving us money, and I mention it only to imply that having now overcome these issues, our rate of savings is higher than it was for probably the first year or so of having this system.
+As an aside, we had various teething problems with the solar and batteries which I won't describe here as it would make things too long and complicated. The issues absolutely reduced the extent to which the kit was saving us money, and I mention it only to imply that having now overcome these issues, our rate of savings is higher than it was for probably the first year or so of having this system. There was also a misconfiguration of our system that wasn't rectified until quite recently which means that I don't have access to an accurate measure of the total power that the panels have generated, which will mean some more simplifying assumptions in the calculation.
 
 ## Our setup and costs
 
-The house has a gas boiler for hot water and central heating. In late August 2022 we had the following installed:
+The house has a gas boiler for hot water and central heating. We have this equipment:
 
 - SolaX X1 G4 Hybrid 5kW Inverter
 - 1 x master and 2 x slave SolaX Triple Power batteries (5.8kWh each, 17.4kWh total)
@@ -27,24 +27,39 @@ We went on to have a Marlec Solar iBoost (which is used to heat our hot water ta
 
 As mentioned above we are with Octopus, and we are on a dual electricity rate, meaning that we get cheaper electricity between 00:30 and 04:30. We also export a certain amount of electricity when it is very sunny and our batteries are full.
 
-Because of this cheap night time rate, I generally force charge the batteries overnight so that we can use cheaper electricity throughout most (or ideally all) of the day without having to import electricity at the much more expensive day rate. I'm not sure if my thinking on the issue is optimal, but in the less sunny months I think it's ideal to have the batteries finish force-charging at 04:30 with a 100% state of charge (SoC), and for that value to gradually decrease during the day down to 10% (the batteries cannot go below this SoC value) by the time it's 00:30 the next day. If the batteries are at a higher SoC by this time then that is fine because then we'll have to import fewer kWh's to get them back to 100%.
+The way the systems operate changes depending on the time of year. In the less sunny and colder months I force charge the batteries to 100% overnight during the cheap rate, and I also time the iBoost to heat the water throughout the cheap rate (although the thermostat will kick in once it's reach its target temperature some time during this period). The gas boiler will be used infrequently to top up hot water later in the day as needed, and of course the gas is used for the central heating.
 
-We also have an electric vehicle, a fairly old Renault Zoe with a 22kWh battery, and we typically charge it during this cheap night period. We have a Zappi charger which permits solar excess charging - in other words once the batteries are full then any additional solar power is redirected into the car. However, given that we tend to need the car first thing in the morning, I have found that I can only use this feature if I'm very confident that no one is going to need the car until either the following day or the evening.
+In the sunnier months the iBoost will not come in the night, and instead excess solar energy will be enough to have a full tank of water by the early afternoon (if not sooner). I will reduce the target state of charge for the force charging of the batteries to around 50% so that we have some battery power to last us until the panels are generating plenty of power for the house and we don't dip into the more expensive day rate electricity.
 
-Our system is (I think) prioritised such that solar power first goes into the batteries, then once they are full it is used to heat our hot water, and once that is heated to the target temperature then it goes into the car.
-
+We have an electric vehicle, a fairly old Renault Zoe with a 22kWh battery, and we typically charge it during this cheap night period. We have a Zappi charger which permits solar excess charging - in other words once the batteries are full then any additional solar power is redirected into the car. However, given that we tend to need the car first thing in the morning, I have found that I can only use this feature if I'm very confident that no one is going to need the car until either the following day or the evening.
 
 ## Methodology
 
-The calculation I want to end up with is something like this:
+We need to know the following things:
+
+Since the installation...
+- How much have we spent on electricity? (`actual_spend_electricity`)
+- How much have we spend on gas? (`actual_spend_gas`)
+- How much would we have spent on electricity? (`predicted_electricity`)
+- How much would we have spent on gas? (`predicted_gas`)
+
+The value of 'how much has it paid itself back' is then:
 
 ```
-avg_savings_per_month = (total_amount_spent - amount_saved)/number_of_months_since_installation
+electricity_saving = actual_spend_electricity - predicted_electricity
+gas_saving = actual_spend_gas - predicted_gas
+total_saving = electricity_saving + gas_saving
+amount_paid_back = cost_of_system - total_saving
 ```
 
 The easier part of this is working out how much our energy costs have been since the purchase and installation: it's simply the sum of the data in our bills. Our bills are broken down into electricity and gas costs, and given that our panels, batteries, and iBoost have impacts on both of these readings, we can assume that savings are being made in both costs. It is only the costs of our central heating, which remains entirely dependent on gas, which is unaffected by our equipment.
 
 The much more difficult part is working out what we _would_ have spent had we not made the above purchases.
+
+
+### actual_spend_electricity
+
+
 
 ## What we have spent on energy since buying the equipment
 
